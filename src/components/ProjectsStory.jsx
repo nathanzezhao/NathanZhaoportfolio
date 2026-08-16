@@ -21,24 +21,6 @@ const PROJECTS = [
     copy: 'Pointer-driven distortion and page transitions, tuned so the surface feels like metal instead of glass. Placeholder body copy.',
     links: ['Demo', 'Code', 'Notes', 'Clip'],
   },
-  {
-    name: 'Nimbus',
-    kicker: 'Editorial site',
-    copy: 'A long-form layout with a left-rail selector and a single focused panel. This card is just holding space for later content.',
-    links: ['Site', 'Code', 'Figma', 'Copy'],
-  },
-  {
-    name: 'Pulse',
-    kicker: 'Motion study',
-    copy: 'Timing, easing, and residual blur across a set of UI states. Temporary description until the project details land.',
-    links: ['Live', 'Code', 'Study', 'Still'],
-  },
-  {
-    name: 'Echo',
-    kicker: 'Personal tool',
-    copy: 'A small utility with a big surface. Use this slot for the next project — title, story, and links can all change.',
-    links: ['App', 'Code', 'Log', 'Shot'],
-  },
 ];
 
 const PROJECT_NAMES = PROJECTS.map(item => item.name);
