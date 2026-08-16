@@ -20,7 +20,6 @@
 .page-swap.is-covered {
   opacity: 0;
   pointer-events: none;
-  transition: none;
 }
 
 .page-swap__stage {

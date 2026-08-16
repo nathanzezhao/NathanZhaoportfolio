@@ -1,8 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import OptionWheel from './OptionWheel.jsx';
 import './ProjectsStory.css';
-
-const FLY_MS = 480;
 
 const PROJECTS = [
   {
@@ -45,45 +43,31 @@ const PROJECTS = [
 
 const PROJECT_NAMES = PROJECTS.map(item => item.name);
 
-export default function ProjectsStory({ fromRect, closing, onDismiss }) {
-  const tabRef = useRef(null);
-  const [phase, setPhase] = useState('fly');
+const IconChevron = ({ dir }) => (
+  <svg className="projects-wheel-nav__icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d={dir === 'up' ? 'M6 14.5 12 8.5l6 6' : 'M6 9.5 12 15.5l6-6'}
+    />
+  </svg>
+);
+
+export default function ProjectsStory({ closing, onDismiss }) {
+  const wheelRef = useRef(null);
   const [selected, setSelected] = useState(0);
-  const [hasSwapped, setHasSwapped] = useState(false);
 
   const project = PROJECTS[selected] ?? PROJECTS[0];
 
-  useLayoutEffect(() => {
-    if (closing) return;
-    const el = tabRef.current;
-    if (!el || !fromRect) return;
-
-    const to = el.getBoundingClientRect();
-    const dx = fromRect.left - to.left;
-    const dy = fromRect.top - to.top;
-    const sx = fromRect.width / Math.max(to.width, 1);
-    const sy = fromRect.height / Math.max(to.height, 1);
-
-    el.style.transformOrigin = 'top left';
-    el.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
-    el.style.overflow = 'hidden';
-
+  useEffect(() => {
     const id = requestAnimationFrame(() => {
-      el.style.transition = `transform ${FLY_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-      el.style.transform = 'none';
+      wheelRef.current?.focus();
     });
-    const done = setTimeout(() => {
-      el.style.transition = '';
-      el.style.overflow = '';
-      el.style.transformOrigin = '';
-      setPhase('in');
-    }, FLY_MS);
-
-    return () => {
-      cancelAnimationFrame(id);
-      clearTimeout(done);
-    };
-  }, [fromRect, closing]);
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     const onKey = e => {
@@ -95,40 +79,56 @@ export default function ProjectsStory({ fromRect, closing, onDismiss }) {
 
   return (
     <div
-      className={`projects-story${phase === 'in' && !closing ? ' is-in' : ''}${closing ? ' is-out' : ''}`}
+      className={`projects-story${closing ? ' is-out' : ''}`}
       onClick={onDismiss}
     >
       <div className="projects-story__layout">
         <div className="projects-story__wheel" onClick={e => e.stopPropagation()}>
+          <div className="projects-wheel-nav">
+            <button
+              type="button"
+              className="projects-wheel-nav__btn"
+              aria-label="Previous project"
+              onClick={() => wheelRef.current?.step(-1)}
+            >
+              <IconChevron dir="up" />
+            </button>
+            <button
+              type="button"
+              className="projects-wheel-nav__btn"
+              aria-label="Next project"
+              onClick={() => wheelRef.current?.step(1)}
+            >
+              <IconChevron dir="down" />
+            </button>
+          </div>
           <OptionWheel
+            ref={wheelRef}
             items={PROJECT_NAMES}
             defaultSelected={0}
-            textColor="#8a9098"
-            activeColor="#2a2e34"
+            textColor="#3d4248"
+            activeColor="#1a1d21"
             side="left"
-            fontSize={2.15}
-            spacing={1.5}
-            curve={1}
-            tilt={5.5}
-            blur={1.8}
-            fade={0.22}
-            minOpacity={0.08}
-            smoothing={180}
-            inset={36}
+            fontSize={1.85}
+            spacing={1.42}
+            curve={0.85}
+            tilt={4.8}
+            blur={0.55}
+            fade={0.07}
+            minOpacity={0.68}
+            smoothing={55}
+            inset={28}
             loop={false}
             draggable
             onChange={index => {
               setSelected(index);
-              if (phase === 'in') setHasSwapped(true);
             }}
           />
         </div>
 
         <div className="projects-story__panel">
           <article
-            key={hasSwapped ? project.name : 'seed'}
-            ref={tabRef}
-            className={`projects-tab${phase === 'fly' ? ' is-flying' : ''}${hasSwapped ? ' is-swap' : ''}`}
+            className="projects-tab"
             onClick={e => e.stopPropagation()}
           >
             <p className="projects-tab__kicker">{project.kicker}</p>

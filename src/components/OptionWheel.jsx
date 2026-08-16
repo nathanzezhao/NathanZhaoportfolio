@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { forwardRef, useRef, useState, useCallback, useEffect, useImperativeHandle } from 'react';
 import './OptionWheel.css';
 
 const DEFAULT_ITEMS = [
@@ -16,10 +16,11 @@ const DEFAULT_ITEMS = [
   'Drum & Bass'
 ];
 
-const OptionWheel = ({
+const OptionWheel = forwardRef(({
   items = DEFAULT_ITEMS,
   defaultSelected = 3,
   onChange,
+  onSettle,
   textColor = '#a6a6a6',
   activeColor = '#ffffff',
   side = 'left',
@@ -37,7 +38,7 @@ const OptionWheel = ({
   soundUrl = '',
   soundVolume = 0.5,
   className = ''
-}) => {
+}, ref) => {
   const rootRef = useRef(null);
   const itemRefs = useRef([]);
   const posRef = useRef(defaultSelected);
@@ -46,7 +47,9 @@ const OptionWheel = ({
   const lastRef = useRef(0);
   const cfgRef = useRef({});
   const onChangeRef = useRef(onChange);
+  const onSettleRef = useRef(onSettle);
   const selectedRef = useRef(defaultSelected);
+  const settledRef = useRef(defaultSelected);
   const wheelTimerRef = useRef(null);
   const dragRef = useRef(null);
   const dragMovedRef = useRef(false);
@@ -59,6 +62,7 @@ const OptionWheel = ({
   const remPx = typeof window !== 'undefined' ? parseFloat(getComputedStyle(document.documentElement).fontSize) || 16 : 16;
 
   onChangeRef.current = onChange;
+  onSettleRef.current = onSettle;
   cfgRef.current = {
     count: items.length,
     items,
@@ -124,6 +128,14 @@ const OptionWheel = ({
       el.style.setProperty('--ow-p', Math.max(0, 1 - Math.min(dist, 1)).toFixed(4));
     }
 
+    if (settled) {
+      const idx = ((Math.round(next) % n) + n) % n;
+      if (idx !== settledRef.current) {
+        settledRef.current = idx;
+        onSettleRef.current?.(idx, cfg.items[idx]);
+      }
+    }
+
     rafRef.current = settled ? null : requestAnimationFrame(runFrame);
   }, []);
 
@@ -165,8 +177,8 @@ const OptionWheel = ({
       if (idx !== selectedRef.current) {
         selectedRef.current = idx;
         setSelectedIndex(idx);
-        onChangeRef.current?.(idx, cfg.items[idx]);
         playTick();
+        if (snap) onChangeRef.current?.(idx, cfg.items[idx]);
       }
       startLoop();
     },
@@ -180,13 +192,15 @@ const OptionWheel = ({
     const onWheel = e => {
       e.preventDefault();
       const cfg = cfgRef.current;
-      const delta = e.deltaMode === 1 ? e.deltaY * 24 : e.deltaY;
-      // Cap each event at one step so notchy mouse wheels move exactly one
-      // option per click, while touchpads still scroll continuously.
-      const step = Math.max(-1, Math.min(1, delta / cfg.rowH));
+      // Mouse wheels report line mode: one option per notch, then snap.
+      if (e.deltaMode !== 0 || Math.abs(e.deltaY) >= 40) {
+        applyTarget(Math.round(targetRef.current) + Math.sign(e.deltaY || e.deltaX), true);
+        return;
+      }
+      const step = (e.deltaY || e.deltaX) / (cfg.rowH * 0.5);
       applyTarget(targetRef.current + step, false);
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
-      wheelTimerRef.current = setTimeout(() => applyTarget(targetRef.current, true), 140);
+      wheelTimerRef.current = setTimeout(() => applyTarget(targetRef.current, true), 80);
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => {
@@ -252,6 +266,19 @@ const OptionWheel = ({
     [applyTarget]
   );
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      step(delta) {
+        applyTarget(Math.round(targetRef.current) + delta, true);
+      },
+      focus() {
+        rootRef.current?.focus();
+      },
+    }),
+    [applyTarget]
+  );
+
   useEffect(() => {
     applyTarget(targetRef.current, false);
   }, [items, fontSize, spacing, curve, tilt, blur, fade, minOpacity, side, loop, smoothing, applyTarget]);
@@ -300,6 +327,8 @@ const OptionWheel = ({
       ))}
     </div>
   );
-};
+});
+
+OptionWheel.displayName = 'OptionWheel';
 
 export default OptionWheel;
