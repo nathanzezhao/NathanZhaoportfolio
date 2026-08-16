@@ -1,0 +1,36 @@
+.bits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  cursor: crosshair;
+  touch-action: none;
+  --mx: -999px;
+  --my: -999px;
+  --hole: 36px;
+}
+
+.bits-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  filter: grayscale(1);
+  -webkit-mask-image: radial-gradient(
+    circle var(--hole) at var(--mx) var(--my),
+    transparent 0,
+    transparent calc(var(--hole) - 3px),
+    #000 var(--hole)
+  );
+  mask-image: radial-gradient(
+    circle var(--hole) at var(--mx) var(--my),
+    transparent 0,
+    transparent calc(var(--hole) - 3px),
+    #000 var(--hole)
+  );
+}

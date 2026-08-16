@@ -1,0 +1,56 @@
+.cta-ripple {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  pointer-events: auto;
+}
+
+.cta-ripple canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.cta-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: cta-in 0.4s ease;
+}
+
+.cta-slot .specular-button {
+  pointer-events: auto;
+  position: relative;
+  z-index: 101;
+  font-size: 1.85rem;
+  padding: 32px 84px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(22px) saturate(1.5);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 48px rgba(0, 0, 0, 0.38);
+}
+
+@keyframes cta-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
