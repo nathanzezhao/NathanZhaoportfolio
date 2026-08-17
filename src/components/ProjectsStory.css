@@ -88,12 +88,22 @@
   cursor: pointer;
   transition:
     background 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    filter 0.22s ease,
+    opacity 0.22s ease;
 }
 
-.projects-wheel-nav__btn:hover {
+.projects-wheel-nav__btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.92);
   transform: scale(1.08);
+}
+
+.projects-wheel-nav__btn:disabled {
+  opacity: 0.38;
+  filter: blur(1.4px);
+  cursor: default;
+  pointer-events: none;
+  box-shadow: none;
 }
 
 .projects-wheel-nav__icon {
@@ -114,8 +124,9 @@
   flex-direction: column;
   width: min(100%, 760px);
   height: min(68vh, 620px);
-  padding: 36px 40px 28px;
+  padding: 42px 44px 32px;
   box-sizing: border-box;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.52);
   border-radius: 22px;
@@ -128,60 +139,126 @@
 }
 
 .projects-tab__kicker {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-family: 'Clash Display', sans-serif;
-  font-size: clamp(13px, 1.15vw, 16px);
+  font-size: clamp(11px, 1vw, 13px);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #6a7078;
 }
 
-.projects-tab__title {
+.projects-tab__heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
   margin: 0 0 18px;
+}
+
+.projects-tab__title {
+  margin: 0;
   font-family: 'Clash Display', sans-serif;
-  font-size: clamp(32px, 3.4vw, 52px);
+  font-size: clamp(26px, 2.7vw, 40px);
   font-weight: 500;
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: 0.02em;
   color: #2a2e34;
+}
+
+.projects-tab__dates {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(13px, 1.2vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #6a7078;
+  white-space: nowrap;
+}
+
+.projects-tab__gh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 1px 3px rgba(18, 20, 24, 0.08);
+  color: #2a2e34;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.projects-tab__gh:hover {
+  background: rgba(255, 255, 255, 0.92);
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 6px 14px rgba(18, 20, 24, 0.12);
+}
+
+.projects-tab__gh-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .projects-tab__copy {
   margin: 0;
   max-width: 38em;
   font-family: 'Clash Display', sans-serif;
-  font-size: clamp(16px, 1.55vw, 20px);
+  font-size: clamp(16px, 1.5vw, 19px);
   font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: 0.01em;
+  line-height: 1.7;
+  letter-spacing: 0.015em;
   color: #3d4248;
 }
 
 .projects-tab__actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 10px;
   width: 100%;
   margin-top: auto;
   padding-top: 28px;
 }
 
 .projects-tab__action {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  aspect-ratio: 1;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.86);
   box-shadow: 0 1px 3px rgba(18, 20, 24, 0.06);
   font-family: 'Clash Display', sans-serif;
-  font-size: clamp(13px, 1.2vw, 16px);
+  font-size: clamp(11px, 1.05vw, 13px);
   font-weight: 500;
   letter-spacing: 0.02em;
+  line-height: 1.2;
   color: #2a2e34;
   user-select: none;
+}
+
+.projects-tab__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--stack-color, #6a7078) 18%, #fff);
+  color: var(--stack-color, #6a7078);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--stack-color, #6a7078) 22%, transparent);
 }
 
 .projects-story.is-out {
@@ -239,14 +316,10 @@
 
   .projects-tab {
     height: min(72vh, 560px);
-    padding: 24px 22px 18px;
+    padding: 28px 24px 22px;
   }
 
   .projects-tab__actions {
     gap: 8px;
-  }
-
-  .projects-tab__action {
-    border-radius: 12px;
   }
 }
