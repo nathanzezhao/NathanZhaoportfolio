@@ -147,6 +147,18 @@ const MoltenMetal = ({
     canvas.style.pointerEvents = 'none';
     container.appendChild(canvas);
 
+    renderer.setViewport = (width, height, x = 0, y = 0) => {
+      if (!renderer.state.framebuffer) {
+        width = gl.drawingBufferWidth;
+        height = gl.drawingBufferHeight;
+      }
+      gl.viewport(x, y, width, height);
+      renderer.state.viewport.x = x;
+      renderer.state.viewport.y = y;
+      renderer.state.viewport.width = width;
+      renderer.state.viewport.height = height;
+    };
+
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
       vertex,

@@ -41,6 +41,7 @@
   width: 420px;
   height: 400px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: auto;
@@ -77,6 +78,21 @@
     calc(6px + var(--ripple-sx)) calc(16px + var(--ripple-sy)) 18px rgba(18, 20, 24, 0.4)
   );
   will-change: filter;
+}
+
+.folder-name {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 0;
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(18px, 1.7vw, 22px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #f4f5f7;
+  text-align: center;
+  text-shadow: 0 1px 10px rgba(18, 20, 24, 0.45);
+  pointer-events: none;
+  user-select: none;
 }
 
 .folder-stage .folder__back {

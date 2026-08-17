@@ -90,9 +90,20 @@ vec2 coverUV(vec2 uv) {
   return (uv * uResolution - offset) / scaledSize;
 }
 
+float edgeFade(vec2 uv) {
+  vec2 pad = vec2(0.07);
+  vec2 a = smoothstep(vec2(0.0), pad, uv);
+  vec2 b = smoothstep(vec2(0.0), pad, 1.0 - uv);
+  return a.x * a.y * b.x * b.y;
+}
+
+vec3 sampleBg(vec2 uv) {
+  return texture2D(uTexture, clamp(uv, vec2(0.0), vec2(1.0))).rgb;
+}
+
 void main() {
-  float amount = texture2D(uDisplacement, vUv).r;
-  vec2 base = coverUV(vUv);
+  float amount = texture2D(uDisplacement, vUv).r * edgeFade(vUv);
+  vec2 base = clamp(coverUV(vUv), vec2(0.0), vec2(1.0));
 
   float theta = amount * uSwirl * TAU;
   vec2 dir = vec2(sin(theta), cos(theta));
@@ -101,11 +112,11 @@ void main() {
   vec3 color;
   if (uDispersion > 0.001) {
     float split = uDispersion * 0.25;
-    color.r = texture2D(uTexture, base + push * (1.0 + split)).r;
-    color.g = texture2D(uTexture, base + push).g;
-    color.b = texture2D(uTexture, base + push * (1.0 - split)).b;
+    color.r = sampleBg(base + push * (1.0 + split)).r;
+    color.g = sampleBg(base + push).g;
+    color.b = sampleBg(base + push * (1.0 - split)).b;
   } else {
-    color = texture2D(uTexture, base + push).rgb;
+    color = sampleBg(base + push);
   }
 
   if (uGrayscale > 0.001) {
@@ -194,12 +205,37 @@ const RippleDistortion = ({
     canvas.style.display = 'block';
     mount.appendChild(canvas);
 
+    renderer.setViewport = (width, height, x = 0, y = 0) => {
+      if (!renderer.state.framebuffer) {
+        width = gl.drawingBufferWidth;
+        height = gl.drawingBufferHeight;
+      }
+      gl.viewport(x, y, width, height);
+      renderer.state.viewport.x = x;
+      renderer.state.viewport.y = y;
+      renderer.state.viewport.width = width;
+      renderer.state.viewport.height = height;
+    };
+
+    const lockTexture = texture => {
+      texture.bind();
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      if ('TEXTURE_MAX_LEVEL' in gl) {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_BASE_LEVEL, 0);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_LEVEL, 0);
+      }
+    };
+
     const imageTexture = new Texture(gl, {
       generateMipmaps: false,
       minFilter: gl.LINEAR,
       magFilter: gl.LINEAR,
       wrapS: gl.CLAMP_TO_EDGE,
       wrapT: gl.CLAMP_TO_EDGE,
+      unpackAlignment: 1,
       flipY: false
     });
 
@@ -212,6 +248,7 @@ const RippleDistortion = ({
     imageTexture.image = white;
     imageTexture.needsUpdate = true;
     imageTexture.update();
+    lockTexture(imageTexture);
 
     let disposed = false;
     const image = new window.Image();
@@ -309,12 +346,15 @@ const RippleDistortion = ({
       width = Math.max(1, mount.clientWidth);
       height = Math.max(1, mount.clientHeight);
       renderer.setSize(width, height);
-      compositeUniforms.uResolution.value = [width, height];
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      compositeUniforms.uResolution.value = [gl.drawingBufferWidth, gl.drawingBufferHeight];
 
       const scale = QUALITY_SCALE[quality] || QUALITY_SCALE.high;
       const fieldW = Math.max(2, Math.round(width * scale));
       const fieldH = Math.max(2, Math.round(height * scale));
       displacementTarget.setSize(fieldW, fieldH);
+      lockTexture(displacementTarget.texture);
       compositeUniforms.uTexel.value = [1 / fieldW, 1 / fieldH];
     };
 
@@ -429,6 +469,7 @@ const RippleDistortion = ({
       imageTexture.flipY = false;
       imageTexture.needsUpdate = true;
       imageTexture.update();
+      lockTexture(imageTexture);
       compositeUniforms.uTextureSize.value = [bg.width, bg.height];
     };
 

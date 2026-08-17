@@ -45,8 +45,6 @@ const LINKS = [
   { href: 'https://www.overleaf.com/7456295611njwfqwbmtpdm#c4cd7c', label: 'Resume', icon: IconResume },
 ];
 
-const FLY_MS = 480;
-
 const EDGE_NODES = [
   ['intro', 'midTop'],
   ['intro', 'midBot'],
@@ -59,34 +57,19 @@ const cubicEdge = (a, b) => {
   return `M ${a.x.toFixed(2)} ${a.y.toFixed(2)} C ${(a.x + dx).toFixed(2)} ${a.y.toFixed(2)}, ${(b.x - dx).toFixed(2)} ${b.y.toFixed(2)}, ${b.x.toFixed(2)} ${b.y.toFixed(2)}`;
 };
 
-export default function AboutStory({ fromRect, closing, onDismiss }) {
+export default function AboutStory({ closing, onDismiss }) {
   const rootRef = useRef(null);
-  const introRef = useRef(null);
   const dotsRef = useRef({});
-  const [phase, setPhase] = useState('fly');
-  const [flyBox, setFlyBox] = useState(fromRect);
+  const [phase, setPhase] = useState('ready');
   const [lines, setLines] = useState([]);
   const [size, setSize] = useState({ w: 1, h: 1 });
   const [hoverNode, setHoverNode] = useState(null);
 
   useLayoutEffect(() => {
     if (closing) return;
-    if (!introRef.current || !fromRect) return;
-    const to = introRef.current.getBoundingClientRect();
-    const id = requestAnimationFrame(() => {
-      setFlyBox({
-        top: to.top,
-        left: to.left,
-        width: to.width,
-        height: to.height,
-      });
-    });
-    const done = setTimeout(() => setPhase('in'), FLY_MS);
-    return () => {
-      cancelAnimationFrame(id);
-      clearTimeout(done);
-    };
-  }, [fromRect, closing]);
+    const id = requestAnimationFrame(() => setPhase('in'));
+    return () => cancelAnimationFrame(id);
+  }, [closing]);
 
   useEffect(() => {
     const measure = () => {
@@ -198,11 +181,12 @@ export default function AboutStory({ fromRect, closing, onDismiss }) {
 
         <article
           className="story-card story-card--intro"
-          ref={introRef}
-          style={phase === 'fly' ? { visibility: 'hidden' } : undefined}
           {...nodeHover('intro')}
         >
-          <span className="story-card__title">Hey, I'm Nathan!</span>
+          <div className="story-intro">
+            <span className="story-card__title">Hey, I'm Nathan!</span>
+            <p className="story-card__blurb">I like building and designing cool things!</p>
+          </div>
           <span className="story-dot story-dot--right" ref={setDot('intro')} />
         </article>
 
@@ -261,20 +245,6 @@ export default function AboutStory({ fromRect, closing, onDismiss }) {
           </div>
         </article>
       </div>
-
-      {phase === 'fly' && flyBox ? (
-        <div
-          className="story-fly"
-          style={{
-            top: flyBox.top,
-            left: flyBox.left,
-            width: flyBox.width,
-            height: flyBox.height,
-          }}
-        >
-          <span className="story-card__title">{closing ? 'About' : "Hey, I'm Nathan!"}</span>
-        </div>
-      ) : null}
     </div>
   );
 }

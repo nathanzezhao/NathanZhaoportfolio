@@ -39,7 +39,7 @@ const PROJECTS = [
   {
     name: 'Mr. Interviewer',
     kicker: 'Virtual Mock Interviewer',
-    copy: 'Virtual mock interviewer that spans across several industries, from tech to healthcare. Gives advice based on user input, and gives a rating based on word matched similar to a ATS system.',
+    copy: 'Virtual mock interviewer that spans across several industries, from tech to healthcare. Gives advice based on user input, and offers a rating based on words matched: similar to an ATS system.',
     links: ['HTML/CSS/JavaScript'],
     github: 'https://github.com/nathanzezhao/mrinterviewer',
     dates: 'April 2026 - May 2026',

@@ -4,6 +4,7 @@ import RippleDistortion from './components/RippleDistortion.jsx';
 import Folder from './components/Folder.jsx';
 import AboutStory from './components/AboutStory.jsx';
 import ProjectsStory from './components/ProjectsStory.jsx';
+import ExperienceStory from './components/ExperienceStory.jsx';
 import PageSwap, { PAGE_TITLES, PageSheet } from './components/PageSwap.jsx';
 import './WheelPage.css';
 
@@ -34,7 +35,8 @@ export default function App() {
 
   const handleSelect = (title, rect) => {
     setPage({
-      type: title === 'About' ? 'story' : title === 'Projects' ? 'projects' : 'sheet',
+      type:
+        title === 'About' ? 'story' : title === 'Projects' ? 'projects' : title === 'Experience' ? 'experience' : 'sheet',
       title,
       top: rect.top,
       left: rect.left,
@@ -48,7 +50,8 @@ export default function App() {
     if (!pageClosing) return;
     setSwapIndex(PAGE_TITLES.indexOf(page?.title));
     setSwapSignal(n => n + 1);
-    const delay = page?.type === 'story' || page?.type === 'projects' ? 520 : 280;
+    const delay =
+      page?.type === 'story' || page?.type === 'projects' || page?.type === 'experience' ? 520 : 280;
     const t = setTimeout(() => {
       setPage(null);
       setPageClosing(false);
@@ -154,6 +157,7 @@ export default function App() {
                 <span className="paper-label">About</span>,
               ]}
             />
+            <p className="folder-name">Nathan Zhao</p>
           </div>
         </div>
       ) : null}
@@ -173,6 +177,9 @@ export default function App() {
       ) : null}
       {page?.type === 'projects' ? (
         <ProjectsStory fromRect={page} closing={pageClosing} onDismiss={dismissPage} />
+      ) : null}
+      {page?.type === 'experience' ? (
+        <ExperienceStory closing={pageClosing} onDismiss={dismissPage} />
       ) : null}
       {page?.type === 'sheet' ? (
         <PageSheet title={page.title} closing={pageClosing} onBack={dismissPage} />
