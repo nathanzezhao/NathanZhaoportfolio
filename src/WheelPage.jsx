@@ -9,7 +9,7 @@ import PageSwap, { PAGE_TITLES, PageSheet } from './components/PageSwap.jsx';
 import './WheelPage.css';
 
 export default function App() {
-  const [showFolder, setShowFolder] = useState(false);
+  const [showFolder, setShowFolder] = useState(true);
   const [showSwap, setShowSwap] = useState(false);
   const [swapClosing, setSwapClosing] = useState(false);
   const [page, setPage] = useState(null);
