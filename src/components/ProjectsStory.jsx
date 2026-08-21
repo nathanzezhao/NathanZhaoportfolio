@@ -23,7 +23,7 @@ const PROJECTS = [
     kicker: 'Local RAG Desktop Agent - v1',
     copy: 'A local floating desktop assistant. Frameless, always on-top electron window that  \
     collapses into a small orb and expands into chat. Remembers facts about you across different chat sessions \
-    through intent assessment and links to local documents for retrieval. Runs locally.  ',
+    through intent assessment and links to local documents for retrieval. Built to improve everyday workflow and runs locally. Check out the Repo README for more info. ',
     links: ['Python', 'HTML/CSS/JavaScript', 'Electron', 'SQLite', 'Fast API', 'Ollama/Gemini LLM', 'Next.js'],
     github: 'https://github.com/nathanzezhao/michelle.ai',
     dates: 'May 2026 – Present',
