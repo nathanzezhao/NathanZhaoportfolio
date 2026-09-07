@@ -38,14 +38,14 @@ const SECTIONS = [
     roles: [
       {
        
-        dates: 'Jan 2026 — April 2026',
-        title: 'Events Team Executive',
+        dates: 'Sep 2026 — Present',
+        title: 'Director of Internals',
         company: "University of Waterloo Chinese Student's Association",
         bullets: [
-          'Planned and executed various cultural and student-based events within and outside of the University of Waterloo campus through various sponsors while working with other teams.',
-          'Explored ways to visualize and coordinate resources (sponsors, vendors, venues) across multiple teams to execute events while staying under budget.',
-          'Achieved a combined turnout of over 5000 students to various held events during the Winter 2026 semester.',
-          'Incoming Director of Internals - Fall 2026',
+          'Optimizing and structuring the internal networks of UWCSA totaling over 750 members and alumni',
+          'Managing and coordinating internal and external club term projects, utilizing four seperate teams (Events, Marketing, Sponsorship, Finance) to execute large campus-scale events for students.',
+          'Led weekly recap meetings to rebase teams and roles, while analyzing information gathered from internal members to optimize internal structuring.',
+          'Prev. Events Executive (Jan 2026 - Apr 2026)',
         ],
       },
       {
