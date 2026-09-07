@@ -44,7 +44,7 @@ const SECTIONS = [
         bullets: [
           'Optimizing and structuring the internal networks of UWCSA totaling over 750 members and alumni',
           'Managing and coordinating internal and external club term projects, utilizing four seperate teams (Events, Marketing, Sponsorship, Finance) to execute large campus-scale events for students.',
-          'Led weekly recap meetings to rebase teams and roles, while analyzing information gathered from internal members to optimize internal structuring.',
+          'Leading weekly recap meetings to rebase teams and roles, while analyzing information gathered from internal members to optimize internal structuring.',
           'Prev. Events Executive (Jan 2026 - Apr 2026)',
         ],
       },
