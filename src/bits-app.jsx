@@ -9,5 +9,3 @@ createRoot(document.getElementById('root')).render(
     <Analytics />
   </>
 );
-
-createRoot(document.getElementById('root')).render(<App />);
