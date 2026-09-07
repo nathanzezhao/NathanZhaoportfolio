@@ -16,8 +16,23 @@ const SECTIONS = [
           'Co-managed an agile program consisting of two-week sprints and pairs to increase user on-boarding traffic and saw a 32% increase in web to app user traffic.',
         ],
       },
+      {
+
+        dates: 'Sep 2026 - Present',
+        title: 'Software Developer',
+        company: 'UW CUBE',
+        bullets: [
+          'Building and co-developing an internal assistant tool using React, Typescript, Python, and FastAPI to streamline cross-team workflows within the UW CUBE executive team.',
+          'Integrating LLM based pipelines along with user-tested prototypes to optimize E2E processes.',
+          'Collaborating with team members using git branching strategies and unique agile workflows to ensure progress within alloted sprints.',
+        ]
+      }
     ],
   },
+
+
+
+
   {
     label: 'Leadership & volunteering',
     roles: [
