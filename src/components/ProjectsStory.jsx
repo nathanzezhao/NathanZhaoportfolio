@@ -34,7 +34,7 @@ const PROJECTS = [
     copy: "A tool that scrapes flight prices/times for Canada↔Asia routes (built specifically for a China Eastern manager comparing fares) and shows them side-by-side, so nobody has to check each airline's site by hand.",
     links: ['HTML/CSS/JavaScript (Vanilla Chart.js + SheetJS)', 'Python', 'SQL', ],
     github: 'https://github.com/nathanzezhao/flight-scrape',
-    dates: 'July 2026 - Sep 2026',
+    dates: 'Jul 2026 - Sep 2026',
   },
   {
     name: 'Mr. Interviewer',
